@@ -1,2 +1,2 @@
 # XamarinLab
-Toying arounf with Xamarin and BLE
+Toying around with Xamarin and BLE
