@@ -7,6 +7,10 @@
             <Label Text="Devices"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
+            <Label Text="(Scanning...)" x:Name="lblScanning"
+                VerticalOptions="Start" 
+                HorizontalOptions="CenterAndExpand"  
+                />
 
             <ListView  x:Name="listDevices" ItemsSource="{Binding Devices}" ItemSelected="listDevices_ItemSelected" ItemTapped="listDevices_ItemTapped" >
                 <ListView.ItemTemplate>

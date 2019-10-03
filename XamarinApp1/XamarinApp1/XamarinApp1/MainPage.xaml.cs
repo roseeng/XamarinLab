@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,14 +13,22 @@ namespace XamarinApp1
     public partial class MainPage : ContentPage
     {
         BlueMan _ble;
+        BleDevice _selectedDevice;
 
-        public MainPage()
+        public MainPage(BleDevice selectedDevice = null)
         {
             InitializeComponent();
             _ble = BlueMan.Instance();
+            _selectedDevice = selectedDevice;
         }
         
         bool _timerRunning = false;
+
+        public BleDevice SelectedDevice
+        {
+            get { return _selectedDevice; }
+            set { _selectedDevice = value; }
+        }
 
         protected override void OnAppearing()
         {
@@ -39,6 +48,8 @@ namespace XamarinApp1
         private bool WaitForBleActive()
         {
             if (!_timerRunning) return false;
+
+            Debug.WriteLine("Device selected: " + ((_selectedDevice == null) ? "No" : "Yes"));
 
             status.Text = _ble.GetStateText();
 
@@ -67,19 +78,23 @@ namespace XamarinApp1
         {
             var image = "grey.png";
 
-            switch (_ImageButtonStatus)
+            if (_selectedDevice == null)
+                image = "purple.png";
+            else
             {
-                case 0:
-                    image = "green.png";
-                    break;
-                case 1:
-                    image = "yellow.png";
-                    break;
-                case 2:
-                    image = "red.png";
-                    break;
+                switch (_ImageButtonStatus)
+                {
+                    case 0:
+                        image = "green.png";
+                        break;
+                    case 1:
+                        image = "yellow.png";
+                        break;
+                    case 2:
+                        image = "red.png";
+                        break;
+                }
             }
-
             myButton.Source = ImageSource.FromResource("XamarinApp1." + image, typeof(MainPage).GetTypeInfo().Assembly);
         }
 

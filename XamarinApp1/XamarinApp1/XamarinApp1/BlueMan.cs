@@ -79,6 +79,13 @@ namespace XamarinApp1
 
         public async void TryStartScanningAsync(bool refresh = false)
         {
+            if (!this.HasBluetooth())
+            {
+                Thread.Sleep(6000);
+                AddDummyDevices();
+                return;
+            }
+
             if (Xamarin.Forms.Device.RuntimePlatform == Device.Android)
             { 
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
@@ -95,7 +102,7 @@ namespace XamarinApp1
                 } 
             }
 
-            if (refresh) // this.HasBluetooth() && (refresh || !_devices.Any()) && !_IsScanning)
+            if (this.HasBluetooth() && refresh) // || !_devices.Any()) && !_IsScanning)
             {
                 ScanForDevices();
             }
@@ -128,8 +135,6 @@ namespace XamarinApp1
             }
 
             _cancellationTokenSource = new CancellationTokenSource();
-
-            _IsScanning = true;
 
             await _adapter.StartScanningForDevicesAsync(_cancellationTokenSource.Token);
         }
@@ -174,6 +179,14 @@ namespace XamarinApp1
             dum += 1;
             */
             return _devices;
+        }
+
+        private void AddDummyDevices()
+        {
+            _devices.Add(new BleDevice() { Name = "Allan", DeviceId = Guid.NewGuid(), RSSI = 2 });
+            _devices.Add(new BleDevice() { Name = "tar", DeviceId = Guid.NewGuid(), RSSI = 12 });
+            _devices.Add(new BleDevice() { Name = "Kakan", DeviceId = Guid.NewGuid(), RSSI = 21 });
+            _devices.Add(new BleDevice() { Name = "2400", DeviceId = Guid.NewGuid(), RSSI = 7 });
         }
     }
 

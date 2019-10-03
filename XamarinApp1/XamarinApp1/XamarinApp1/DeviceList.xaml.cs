@@ -21,6 +21,7 @@ namespace XamarinApp1
             InitializeComponent();
             _ble = BlueMan.Instance();
             listDevices.ItemsSource = Devices;
+            lblScanning.SetBinding(IsVisibleProperty, nameof(this.IsScanning));
         }
 
         ObservableCollection<BleDevice> _devs;
@@ -57,25 +58,47 @@ namespace XamarinApp1
         {
             if (!_timerRunning) return false;
 
-            _IsScanning = true;
+            IsScanning = true;
+            lblScanning.IsVisible = true;
 
             _ble.TryStartScanningAsync(refresh: true);
             listDevices.ItemsSource = null;
             _ = this.Devices;
             listDevices.ItemsSource = _devs;
 
-            _IsScanning = false;
+            IsScanning = false;
+            lblScanning.IsVisible = false;
             return true;
         }
 
+        public bool IsScanning
+        {
+            get
+            {
+                return _IsScanning;
+            }
+            set
+            {
+                _IsScanning = value;
+                OnPropertyChanged();
+            }
+        }
         private void listDevices_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             Debug.WriteLine(((BleDevice)e.SelectedItem).Name);
         }
 
-        private void listDevices_ItemTapped(object sender, ItemTappedEventArgs e)
+        async private void listDevices_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             Debug.WriteLine(((BleDevice)e.Item).Name);
+            var p = Navigation.NavigationStack.First();
+            if (p is MainPage)
+            {
+                var mp = p as MainPage;
+                mp.SelectedDevice = (BleDevice)e.Item;
+            }
+            await Navigation.PopAsync();
+//            await Navigation.PushAsync(new MainPage((BleDevice)e.Item));
         }
     }
 }
