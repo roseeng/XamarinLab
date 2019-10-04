@@ -51,6 +51,11 @@ namespace XamarinApp1
             return _ble.State == BluetoothState.On;
         }
 
+        public BluetoothState BluetoothState
+        {
+            get { return _ble.State; }
+        }
+
         public string GetStateText()
         {
             switch (_ble.State)

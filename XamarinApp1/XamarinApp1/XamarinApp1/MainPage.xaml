@@ -10,7 +10,7 @@
                 HorizontalOptions="End"
                 Clicked="Button_Clicked" />
         
-        <Label x:Name="status" Text="Welcome to Xamarin.Forms!" 
+        <Label x:Name="status" Text="Welcome to Xamarin.Forms!" TextColor="Gray"
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
 

@@ -1,4 +1,5 @@
 ﻿
+using Plugin.BLE.Abstractions.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,8 +27,13 @@ namespace XamarinApp1
 
         public BleDevice SelectedDevice
         {
-            get { return _selectedDevice; }
-            set { _selectedDevice = value; }
+            get { 
+                return _selectedDevice; 
+            }
+            set { 
+                _selectedDevice = value;
+                status.Text = _selectedDevice.Name;
+            }
         }
 
         protected override void OnAppearing()
@@ -51,7 +57,8 @@ namespace XamarinApp1
 
             Debug.WriteLine("Device selected: " + ((_selectedDevice == null) ? "No" : "Yes"));
 
-            status.Text = _ble.GetStateText();
+            if (_selectedDevice == null || _ble.BluetoothState != BluetoothState.On)
+                status.Text = _ble.GetStateText();
 
             if (_ble.HasBluetooth())
             {
